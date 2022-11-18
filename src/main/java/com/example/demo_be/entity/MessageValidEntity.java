@@ -17,7 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "TB_M_MESSAGE_VALID")
+@Table(name = "TB_M_MESSAGE")
 public class MessageValidEntity extends CommonEntity {
 
    @Id

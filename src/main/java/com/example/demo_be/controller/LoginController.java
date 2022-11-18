@@ -3,12 +3,10 @@ package com.example.demo_be.controller;
 import javax.validation.Valid;
 
 import com.example.demo_be.base.response.Response;
-import com.example.demo_be.request.EmployeeRequest;
 import com.example.demo_be.response.LoginResponse;
 import com.example.demo_be.service.LoginService;
 import com.example.demo_be.util.ResponseUtil;
 import com.example.demo_be.vo.User;
-import com.example.demo_be.vo.UserInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

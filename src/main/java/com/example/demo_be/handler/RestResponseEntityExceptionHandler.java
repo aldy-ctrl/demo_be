@@ -42,7 +42,7 @@ public class RestResponseEntityExceptionHandler {
 
         Response<Object> response = new Response<>(ResponseStatus.ERROR, new Date());
 
-        response.setMessageCode("COMMNERR00002");
+        response.setMessageCode("COMMNERR00001");
         response.setMessage(messageService(response.getMessageCode(), ex.getMessage()));
 
         log.error(response.getMessageCode(), ex);
@@ -69,7 +69,7 @@ public class RestResponseEntityExceptionHandler {
         header.setContentType(MediaType.APPLICATION_JSON);
 
         Response<Object> response = new Response<>(ResponseStatus.ERROR, new Date());
-        response.setMessageCode("COMMNERR00002");
+        response.setMessageCode("COMMNERR00001");
         response.setMessage(messageService(response.getMessageCode(),
                 ex.getMessage()));
 

@@ -1,12 +1,16 @@
 package com.example.demo_be.service.impl;
 
 import com.example.demo_be.base.service.impl.BaseServiceImpl;
+import com.example.demo_be.exception.BusinessException;
 import com.example.demo_be.exception.ValidationException;
 import com.example.demo_be.repository.UserRepository;
 import com.example.demo_be.response.LoginResponse;
 import com.example.demo_be.service.LoginService;
 import com.example.demo_be.util.JwtUtil;
 import com.example.demo_be.vo.JwtInfo;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,13 +36,14 @@ public class LoginServiceImpl extends BaseServiceImpl implements LoginService {
    @Override
    public LoginResponse login(String username, String password) {
 
-      String COMMNERR00005 = "Forbidden";
+      // byte[] decodedPass = Base64.getDecoder().decode(password);
+      // password = new String(decodedPass, StandardCharsets.UTF_8);
 
       try {
          Authentication auth = authenticationManager
                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
       } catch (BadCredentialsException ex) {
-         throw new ValidationException(COMMNERR00005);
+         throw new BusinessException("COMMNERR00008");
       }
 
       return this.generateLoginResponse(username);

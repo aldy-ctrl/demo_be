@@ -20,21 +20,21 @@ public class RoleDAOImpl implements RoleDAO {
    @Override
    public List<RoleVo> getActiveRoles(String username) {
       List<RoleVo> roles = new ArrayList<>();
-      StringBuilder sb = new StringBuilder();
+      StringBuilder sqlQuery = new StringBuilder();
+      sqlQuery.append(" select urd.role_cd, r.role_name, r.role_desc, r.super_admin_flag ");
+      sqlQuery.append(" from tb_m_user_role ur ");
+      sqlQuery.append(" 	inner join tb_m_user_role_d urd ");
+      sqlQuery.append(" 		on urd.username = ur.username ");
+      sqlQuery.append(" 		and urd.valid_from_dt = ur.valid_from_dt ");
+      sqlQuery.append(" 	inner join tb_m_role r ");
+      sqlQuery.append(" 		on r.role_cd = urd.role_cd ");
+      sqlQuery.append(" where 1 = 1 ");
+      sqlQuery.append(" 	and ur.deleted_flag = false ");
+      sqlQuery.append(" 	and r.deleted_flag = false ");
+      sqlQuery.append(" 	and current_date between ur.valid_from_dt and ur.valid_to_dt ");
+      sqlQuery.append(" 	and ur.username = :username ");
 
-      sb.append("select ");
-      sb.append("	tru.role_cd, ");
-      sb.append("	tr.role_name, ");
-      sb.append("	tr.admin_flag ");
-      sb.append("from ");
-      sb.append("	public.tb_role_user tru ");
-      sb.append("inner join public.tb_role tr on ");
-      sb.append("tru.role_cd = tr.role_cd ");
-      sb.append("inner join public.tb_m_user tmu on ");
-      sb.append("tru.username = tmu.username ");
-      sb.append("where tr.deleted_flag = false and tru.username = :username ");
-
-      Query query = entityManager.createNativeQuery(sb.toString());
+      Query query = entityManager.createNativeQuery(sqlQuery.toString());
       query.setParameter("username", username);
 
       @SuppressWarnings("unchecked")
@@ -45,7 +45,7 @@ public class RoleDAOImpl implements RoleDAO {
 
          roleVO.setRoleCd((String) row[0]);
          roleVO.setRoleName((String) row[1]);
-         roleVO.setAdminFlag((Boolean) row[2]);
+         roleVO.setAdminFlag((Boolean) row[3]);
 
          roles.add(roleVO);
       }
