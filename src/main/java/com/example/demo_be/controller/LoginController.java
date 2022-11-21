@@ -1,10 +1,12 @@
 package com.example.demo_be.controller;
 
+import java.util.Base64;
+
 import javax.validation.Valid;
 
 import com.example.demo_be.base.response.Response;
 import com.example.demo_be.response.LoginResponse;
-import com.example.demo_be.service.LoginService;
+import com.example.demo_be.service.userService.LoginService;
 import com.example.demo_be.util.ResponseUtil;
 import com.example.demo_be.vo.User;
 
@@ -27,7 +29,9 @@ public class LoginController {
    @PostMapping("/login")
    public Response<LoginResponse> login(@RequestBody @Valid User user) {
 
-      LoginResponse loginResponse = service.login(user.getUsername(), user.getPassword());
+      String encodedPassword = Base64.getEncoder().encodeToString(user.getPassword().getBytes());
+
+      LoginResponse loginResponse = service.login(user.getUsername(), encodedPassword);
 
       return responseUtil.generateResponseSuccess(loginResponse);
    }

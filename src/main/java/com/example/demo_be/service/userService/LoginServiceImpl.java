@@ -1,11 +1,10 @@
-package com.example.demo_be.service.impl;
+package com.example.demo_be.service.userService;
 
 import com.example.demo_be.base.service.impl.BaseServiceImpl;
 import com.example.demo_be.exception.BusinessException;
 import com.example.demo_be.exception.ValidationException;
 import com.example.demo_be.repository.UserRepository;
 import com.example.demo_be.response.LoginResponse;
-import com.example.demo_be.service.LoginService;
 import com.example.demo_be.util.JwtUtil;
 import com.example.demo_be.vo.JwtInfo;
 
@@ -36,9 +35,6 @@ public class LoginServiceImpl extends BaseServiceImpl implements LoginService {
    @Override
    public LoginResponse login(String username, String password) {
 
-      // byte[] decodedPass = Base64.getDecoder().decode(password);
-      // password = new String(decodedPass, StandardCharsets.UTF_8);
-
       try {
          Authentication auth = authenticationManager
                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -46,24 +42,22 @@ public class LoginServiceImpl extends BaseServiceImpl implements LoginService {
          throw new BusinessException("COMMNERR00008");
       }
 
-      return this.generateLoginResponse(username);
+      return this.generateLoginResponse(username, password);
    }
 
-   private LoginResponse generateLoginResponse(String username) {
+   private LoginResponse generateLoginResponse(String username, String password) {
 
-      JwtInfo accessTokenInfo = jwtUtil.generateAccessToken(username);
+      JwtInfo accessTokenInfo = jwtUtil.generateAccessToken(username, password);
 
       long expMiliDetik = accessTokenInfo.getAge();
-      long expDetik = expMiliDetik / 1000;
-      long expMenit = expDetik / 60;
-      long menitAktual = expMenit % 60;
-      String finalAge = Long.toString(menitAktual);
+      long hoursAktual = (expMiliDetik / (1000 * 60 * 60));
+      String finalAge = Long.toString(hoursAktual);
 
       LoginResponse response = new LoginResponse();
       response.setTokenType(jwtUtil.getTokenType());
       response.setAccessToken(accessTokenInfo.getToken());
       response.setAccessTokenExpDate(accessTokenInfo.getExpiration());
-      response.setAccessTokenAge(finalAge + " Minutes");
+      response.setAccessTokenAge(finalAge + " Hours");
       return response;
    }
 

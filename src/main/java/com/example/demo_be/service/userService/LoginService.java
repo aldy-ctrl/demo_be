@@ -1,4 +1,4 @@
-package com.example.demo_be.service;
+package com.example.demo_be.service.userService;
 
 import com.example.demo_be.base.service.BaseService;
 import com.example.demo_be.response.LoginResponse;

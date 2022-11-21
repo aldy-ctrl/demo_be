@@ -1,17 +1,12 @@
 package com.example.demo_be.vo;
 
-import lombok.Data;
-import lombok.NonNull;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class AuthInfoVO {
 
-   @NonNull
-   private List<String> roleCds;
-
-   @NonNull
-   private Boolean isAdminFlag;
+   private List<String> password;
 
 }

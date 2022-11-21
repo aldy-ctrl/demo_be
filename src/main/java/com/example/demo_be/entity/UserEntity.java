@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.example.demo_be.base.entity.CommonEntityD;
+import com.example.demo_be.base.entity.CommonEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,14 +17,23 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "TB_M_USER")
-public class UserEntity extends CommonEntityD {
+@Table(name = "tb_r_user", schema = "tmsupplier")
+public class UserEntity extends CommonEntity {
 
    @Id
    @Column(name = "username", nullable = false)
    private String username;
 
+   @Column(name = "person_name", nullable = false)
+   private String fullName;
+
    @Column(name = "pass", nullable = false)
-   private String pass;
+   private String password;
+
+   @Column(name = "email", nullable = false)
+   private String email;
+
+   @Column(name = "mob_phone_no", nullable = false)
+   private String mobilePhone;
 
 }

@@ -7,17 +7,18 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.example.demo_be.vo.AuthInfoVO;
-import com.example.demo_be.vo.UserInfo;
+import io.jsonwebtoken.Claims;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.Claims;
+import com.example.demo_be.vo.AuthInfoVO;
+import com.example.demo_be.vo.UserInfo;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -29,7 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
    JwtUtil util;
 
    @Override
-   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+   protected void doFilterInternal(HttpServletRequest request,
+         HttpServletResponse response, FilterChain filterChain)
          throws ServletException, IOException {
 
       try {
@@ -64,31 +66,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       UserInfo userInfo = new UserInfo(claims.getSubject());
 
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userInfo, null,
-            authorizationInfo.getRoleCds().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+            authorizationInfo.getPassword().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+
+      System.out.println("INI APAA" + auth);
       SecurityContextHolder.getContext().setAuthentication(auth);
    }
-
-   // private Boolean isUrlPermitted(HttpServletRequest request, AuthInfoVO
-   // authorizationInfo) {
-
-   // if (authorizationInfo != null) {
-   // if (authorizationInfo.getIsAdminFlag() ||
-   // !authorizationInfo.getIsAdminFlag()) {
-   // return true;
-   // }
-
-   // // return authorizationInfo.getPermittedUrls().stream().anyMatch(urlInfo -> {
-   // // boolean hasTrailingQuestionMark =
-   // // "GET".equals(request.getMethod()) &&
-   // // request.getParameterNames().hasMoreElements();
-
-   // // return (request.getRequestURI() + (hasTrailingQuestionMark ? "?" :
-   // // StringUtils.EMPTY)).startsWith(
-   // // urlInfo.getUrl()) && request.getMethod().equals(urlInfo.getReqMthd());
-   // // });
-   // }
-
-   // return false;
-   // }
 
 }

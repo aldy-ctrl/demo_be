@@ -1,4 +1,4 @@
-package com.example.demo_be.security;
+package com.example.demo_be.badsecurity;
 
 import com.example.demo_be.base.response.Response;
 import com.example.demo_be.base.response.ResponseStatus;
