@@ -24,6 +24,20 @@ public class ResponseUtil {
       return this.generateResponseSuccess("COMMNINF00002", data);
    }
 
+   public <T> Response<T> generateResponseNotSuccess(String messageCode) {
+      Response<T> result = new Response<>(ResponseStatus.SUCCESS, new Date());
+      result.setMessageCode(messageCode);
+      result.setMessage("Processed Successfully");
+      result.setData(null);
+
+      return result;
+   }
+
+   public <T> Response<T> generateResponseNotSuccess(T data , String msg) {
+
+      return this.generateResponseNotSuccess(msg);
+   }
+
    public Response<Object> generateResponseSuccess() {
       return this.generateResponseSuccess(null);
    }

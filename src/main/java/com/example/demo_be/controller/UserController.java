@@ -24,7 +24,7 @@ import com.example.demo_be.util.ResponseUtil;
 public class UserController extends BaseController {
 
    @Autowired
-   UserService service;
+   UserService userService;
 
    @Autowired
    private ResponseUtil responseUtil;
@@ -32,7 +32,7 @@ public class UserController extends BaseController {
    @PostMapping("/create")
    public Response<UserResponse> create(Authentication authentication, @RequestBody @Valid UserRequest req) {
 
-      UserResponse loginResponse = service.createUser(req, this.getLoginUsername(authentication));
+      UserResponse loginResponse = userService.createUser(req, this.getLoginUsername(authentication));
 
       return responseUtil.generateResponseSuccess(loginResponse);
    }
@@ -40,7 +40,7 @@ public class UserController extends BaseController {
    @GetMapping("/get/{id}")
    public Response<UserResponse> getByUsername(Authentication authentication, @PathVariable @NotBlank String id) {
 
-      UserResponse loginResponse = service.getUser(id);
+      UserResponse loginResponse = userService.getUser(id);
 
       return responseUtil.generateResponseSuccess(loginResponse);
    }

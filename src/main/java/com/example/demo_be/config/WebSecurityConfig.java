@@ -56,7 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
             .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/login").permitAll()
+            .antMatchers(HttpMethod.POST, "/signIn").permitAll()
+            .antMatchers(HttpMethod.POST, "/signUp").permitAll()
             // .antMatchers(HttpMethod.GET, "/generate-error", "/hello-world").permitAll()
             .anyRequest().authenticated();
    }

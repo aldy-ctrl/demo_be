@@ -1,5 +1,8 @@
 package com.example.demo_be.service.userService;
 
+import org.springframework.http.ResponseEntity;
+
+import com.example.demo_be.base.response.ResponseCustom;
 import com.example.demo_be.base.service.BaseService;
 import com.example.demo_be.request.UserRequest;
 import com.example.demo_be.response.UserResponse;
@@ -7,6 +10,8 @@ import com.example.demo_be.response.UserResponse;
 public interface UserService extends BaseService {
 
    UserResponse createUser(UserRequest req, String username);
+
+   ResponseEntity<ResponseCustom<UserResponse>> signUp(UserRequest req);
 
    UserResponse updateUser(UserRequest req, String username);
 

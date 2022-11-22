@@ -3,19 +3,17 @@ package com.example.demo_be.vo;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
+@Getter
 public class UserVo {
-   @NonNull
-   @NotBlank
    private String username;
-   @NonNull
-   @NotBlank
    private String password;
 
 }
