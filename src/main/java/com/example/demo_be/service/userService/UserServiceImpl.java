@@ -121,7 +121,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
       //JIKA PASS DAN RETYPE PASS TIDAK SAMA
       if (!req.getPassword().equals(req.getRetypePassword())) {
-         return CommonMethod.badReq("PASS DAN RETYPE PASS TIDAK SAMA !");
+         return CommonMethod.badReq("Pass dan retype Pass tidak sama ");
       }
       
 
