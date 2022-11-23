@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
             .antMatchers(HttpMethod.POST, "/signIn").permitAll()
             .antMatchers(HttpMethod.POST, "/signUp").permitAll()
+            .antMatchers("/swagger-ui/**").permitAll()
             // .antMatchers(HttpMethod.GET, "/generate-error", "/hello-world").permitAll()
             .anyRequest().authenticated();
    }
