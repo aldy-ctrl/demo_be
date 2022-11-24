@@ -1,5 +1,7 @@
 package com.example.demo_be.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -33,7 +35,22 @@ public class UserEntity extends CommonEntity {
    @Column(name = "email", nullable = false)
    private String email;
 
-   @Column(name = "mob_phone_no", nullable = false)
-   private String mobilePhone;
+   @Column(name = "otp_regis")
+   private String otpRegis;
+
+   @Column(name = "regis_flag")
+   private Boolean flagRegis;
+
+   @Column(name = "otp_reset")
+   private String otpReset;
+
+   @Column(name = "reset_flag")
+   private Boolean flagReset;
+
+   @Column(name = "regis_time")
+   private Date regisTime;
+
+   @Column(name = "reset_time")
+   private Date resetTime;
 
 }
