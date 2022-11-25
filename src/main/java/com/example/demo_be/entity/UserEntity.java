@@ -35,6 +35,9 @@ public class UserEntity extends CommonEntity {
    @Column(name = "email", nullable = false)
    private String email;
 
+   @Column(name = "mob_phone_no", nullable = false)
+   private String mobilePhone;
+
    @Column(name = "otp_regis")
    private String otpRegis;
 

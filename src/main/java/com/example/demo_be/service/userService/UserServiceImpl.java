@@ -4,7 +4,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Random;
 
-import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import com.example.demo_be.base.response.Response;
 import com.example.demo_be.base.response.ResponseCustom;
 import com.example.demo_be.base.service.impl.BaseServiceImpl;
 import com.example.demo_be.common.CommonMethod;
@@ -26,7 +24,6 @@ import com.example.demo_be.repository.UserRepository;
 import com.example.demo_be.request.UserRequest;
 import com.example.demo_be.response.UserResponse;
 import com.example.demo_be.service.sendMailservice.SendMailService;
-import com.example.demo_be.util.ResponseUtil;
 import com.example.demo_be.vo.MailList;
 import com.example.demo_be.vo.MailNotification;
 import com.example.demo_be.vo.VerifVo;
@@ -149,32 +146,31 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
       UserEntity entity = new UserEntity();
       BeanUtils.copyProperties(req, entity);
-      entity.setCreatedBy(req.getUsername());
-      entity.setCreatedDt(new Date(System.currentTimeMillis()));
-      entity.setDeletedFlag(false);
 
       // ENCODE PASS
       String encodedString = Base64.getEncoder().encodeToString(req.getPassword().getBytes());
       entity.setPassword(encodedString);
 
-      // Send Mail
-
+      // [START] Send Mail
       Random rnd = new Random();
-      int number = rnd.nextInt(999999);
-
+      int number = rnd.nextInt(99999);
       VerifVo vo = new VerifVo();
       vo.setEmail(req.getEmail());
       vo.setUsername(req.getUsername());
       vo.setVerifCode(String.valueOf(number));
 
       MailNotification notification = this.mailNotif(vo);
-
       try {
+         entity.setOtpRegis(String.valueOf(number));
+         entity.setRegisTime(new Date(System.currentTimeMillis()));
+         entity.setFlagRegis(false);
          sendMailService.sendMail(notification);
-      } catch (MessagingException e) {
+      } catch (Exception e) {
          return CommonMethod.badReq("Exception Send Verif Code: ");
       }
+      // [END] Send Mail
 
+      this.setCreateCommon(entity, req.getUsername());
       userRepository.save(entity);
 
       BeanUtils.copyProperties(entity, response);
@@ -183,11 +179,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
    }
 
    private MailNotification mailNotif(VerifVo vo) {
-
-      VerifVo vos = new VerifVo();
-      vos.setUsername(vo.getUsername());
-      vos.setEmail(vo.getEmail());
-      vos.setVerifCode(vo.getVerifCode());
 
       MailNotification noti = new MailNotification();
       noti.setUserName(vo.getUsername());
@@ -199,7 +190,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
       mails.setMailSubject("Email");
 
-      mails.setMailText(this.mailNotificationMsgContent(null));
+      mails.setMailText(this.mailNotificationMsgContent(vo));
       mails.setNotiType("NT_EMAIL");
       mails.setHtmlFormatFlag(true);
       noti.setMails(mails);
@@ -214,8 +205,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
       sb.append("<p align = \"left\">Name : " + vo.getUsername() + " </p>");
       sb.append("<p align = \"left\">Email : " + vo.getEmail() + "</p>");
       sb.append("<hr>");
-      sb.append("<p align = \"left\">Message : </p>");
-      sb.append("<h4>" + vo.getVerifCode() + "<h4/>");
+      sb.append("<p align = \"center\">Verif Code : </p>");
+      sb.append("<h4  style= \"font-size:32px;\"> " + vo.getVerifCode() + " <h4/>");
 
       String mailContent = this.getHtlm();
       mailContent = mailContent.replace("{content}", sb.toString());
