@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.example.demo_be.base.response.Response;
 import com.example.demo_be.base.response.ResponseCustom;
 import com.example.demo_be.request.UserRequest;
+import com.example.demo_be.request.ValidateOtpRequest;
 import com.example.demo_be.response.LoginResponse;
 import com.example.demo_be.response.UserResponse;
 import com.example.demo_be.service.userService.LoginService;
@@ -51,6 +52,12 @@ public class LoginController {
    public ResponseEntity<ResponseCustom<UserResponse>> create(@RequestBody UserRequest req) {
 
       return userService.signUp(req);
+   }
+
+   @PostMapping("/verifyOtpCode")
+   public ResponseEntity<ResponseCustom<UserResponse>> verifyOtpCode(@RequestBody ValidateOtpRequest req) {
+
+      return userService.validateOtpCode(req);
    }
 
    protected UserDetails getLoginUserInfo(Authentication authentication) {

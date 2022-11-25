@@ -22,6 +22,7 @@ import com.example.demo_be.entity.UserEntity;
 import com.example.demo_be.exception.ValidationException;
 import com.example.demo_be.repository.UserRepository;
 import com.example.demo_be.request.UserRequest;
+import com.example.demo_be.request.ValidateOtpRequest;
 import com.example.demo_be.response.UserResponse;
 import com.example.demo_be.service.sendMailservice.SendMailService;
 import com.example.demo_be.vo.MailList;
@@ -224,6 +225,29 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
       return result;
 
+   }
+
+   @Override
+   public ResponseEntity<ResponseCustom<UserResponse>> validateOtpCode(ValidateOtpRequest request) {
+      UserEntity user = userRepository.findById(request.getUsername()).orElse(null);
+
+      UserResponse resp = new UserResponse();
+
+      if (user == null) {
+         return CommonMethod.badReq("User tidak ditemukan ");
+      }
+
+      if (!user.getOtpRegis().equals(request.getOtpCode())) {
+         return CommonMethod.badReq("Otp yang anda masukan salah ");
+
+      }else{
+
+         BeanUtils.copyProperties(user, resp);
+      }
+      
+
+
+      return CommonMethod.success(resp);
    }
 
 }
