@@ -139,6 +139,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
          return CommonMethod.badReq("Email tidak boleh kosong ");
       }
 
+      UserEntity cekEmailUser = userRepository.getUserWithEmail(req.getEmail());
+      if (cekEmailUser != null) {
+         return CommonMethod.badReq("Email sudah terpakai ");
+      }
+
       UserEntity cekIdUser = userRepository.findById(req.getUsername()).orElse(null);
 
       if (cekIdUser != null && cekIdUser.getDeletedFlag() == false) {
@@ -241,6 +246,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
          return CommonMethod.badReq("Otp yang anda masukan salah ");
 
       }else{
+         user.setFlagRegis(true);
+         user.setRegisTime(new Date(System.currentTimeMillis()));
+         userRepository.save(user);
 
          BeanUtils.copyProperties(user, resp);
       }

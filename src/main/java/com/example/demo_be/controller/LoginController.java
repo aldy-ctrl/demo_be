@@ -6,6 +6,9 @@ import javax.validation.Valid;
 
 import com.example.demo_be.base.response.Response;
 import com.example.demo_be.base.response.ResponseCustom;
+import com.example.demo_be.common.CommonMethod;
+import com.example.demo_be.entity.UserEntity;
+import com.example.demo_be.repository.UserRepository;
 import com.example.demo_be.request.UserRequest;
 import com.example.demo_be.request.ValidateOtpRequest;
 import com.example.demo_be.response.LoginResponse;
@@ -36,16 +39,39 @@ public class LoginController {
    UserService userService;
 
    @Autowired
+   UserRepository userRepository;
+
+   @Autowired
    private ResponseUtil responseUtil;
 
+   // @PostMapping("/signIn")
+   // public Response<LoginResponse> login(@RequestBody @Valid User user) {
+   //    UserEntity cekIdUser = userRepository.findById(user.getUsername()).orElse(null);
+
+   //    if (cekIdUser != null && cekIdUser.getDeletedFlag() == false) {
+   //       return CommonMethod.badReq("Username sudah terpakai ");
+   //    }
+
+   //    String encodedPassword = Base64.getEncoder().encodeToString(user.getPassword().getBytes());
+
+   //    LoginResponse loginResponse = loginService.login(user.getUsername(), encodedPassword);
+
+   //    return responseUtil.generateResponseSuccess(loginResponse);
+   // }
+
    @PostMapping("/signIn")
-   public Response<LoginResponse> login(@RequestBody @Valid User user) {
+   public ResponseEntity<ResponseCustom<LoginResponse>> login(@RequestBody @Valid User user) {
+      UserEntity cekIdUser = userRepository.findById(user.getUsername()).orElse(null);
+
+      if (cekIdUser.getFlagRegis() == false) {
+         return CommonMethod.badReq("Username tersebut belum melakukan regist ");
+      }
 
       String encodedPassword = Base64.getEncoder().encodeToString(user.getPassword().getBytes());
 
       LoginResponse loginResponse = loginService.login(user.getUsername(), encodedPassword);
 
-      return responseUtil.generateResponseSuccess(loginResponse);
+      return CommonMethod.success(loginResponse);
    }
 
    @PostMapping("/signUp")

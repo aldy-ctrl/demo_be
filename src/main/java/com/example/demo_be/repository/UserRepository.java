@@ -27,4 +27,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
                   " where tu.deleted_flag = false and tu.username = :username and tu.otp_regis = :otpRegis ", nativeQuery = true)
       UserEntity getUserWithOtp(@Param("username") String username, @Param("otpRegis") String otpRegis);
 
+      @Query(value = "select * from tmsupplier.tb_m_user tu " +
+                  " where tu.deleted_flag = false and tu.email = :email ", nativeQuery = true)
+      UserEntity getUserWithEmail(@Param("email") String email);
+
 }
