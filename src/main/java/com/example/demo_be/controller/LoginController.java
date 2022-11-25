@@ -61,13 +61,20 @@ public class LoginController {
 
    @PostMapping("/signIn")
    public ResponseEntity<ResponseCustom<LoginResponse>> login(@RequestBody @Valid User user) {
+      String encodedPassword = Base64.getEncoder().encodeToString(user.getPassword().getBytes());
+
       UserEntity cekIdUser = userRepository.findById(user.getUsername()).orElse(null);
+      if (cekIdUser == null) {
+         return CommonMethod.badReq("User tidak di temukan ");
+      }
+
+      if (!cekIdUser.getPassword().equals(encodedPassword)) {
+         return CommonMethod.badReq("Password salah ");
+      }
 
       if (cekIdUser.getFlagRegis() == false) {
          return CommonMethod.badReq("Username tersebut belum melakukan regist ");
       }
-
-      String encodedPassword = Base64.getEncoder().encodeToString(user.getPassword().getBytes());
 
       LoginResponse loginResponse = loginService.login(user.getUsername(), encodedPassword);
 
