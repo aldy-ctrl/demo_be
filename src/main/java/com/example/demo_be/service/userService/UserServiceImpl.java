@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo_be.base.response.ResponseCustom;
 import com.example.demo_be.base.service.impl.BaseServiceImpl;
 import com.example.demo_be.common.CommonMethod;
+import com.example.demo_be.constants.Constant;
 import com.example.demo_be.entity.UserEntity;
 import com.example.demo_be.exception.ValidationException;
 import com.example.demo_be.repository.UserRepository;
@@ -81,9 +82,22 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
    }
 
    @Override
-   public UserResponse updateUser(UserRequest req, String username) {
-      // TODO Auto-generated method stub
-      return null;
+   public ResponseEntity<ResponseCustom<UserResponse>> updateUser(UserRequest req, String username) {
+      UserResponse response = new UserResponse();
+
+      if (req.getUsername() == null || StringUtils.isBlank(req.getUsername())) {
+         return CommonMethod.badReq(Constant.MSG_ERROR_USERNAME);
+      }
+
+      UserEntity user = userRepository.findById(req.getUsername()).orElse(null);
+
+      if (user == null) {
+         return CommonMethod.badReq(Constant.MSG_ERROR_USERNAME_NOT_FOUND);
+      }
+
+      BeanUtils.copyProperties(user, response);
+
+      return CommonMethod.success(response);
    }
 
    @Override
@@ -93,18 +107,19 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
    }
 
    @Override
-   public UserResponse getUser(String username) {
+   public ResponseEntity<ResponseCustom<UserResponse>> getUser(String username) {
 
       UserResponse response = new UserResponse();
       UserEntity cekIdUser = userRepository.findById(username).orElse(null);
 
       if (cekIdUser == null || cekIdUser.getDeletedFlag()) {
-         throw new ValidationException("COMMNERR00007", "Username", username);
+         return CommonMethod.badReq(Constant.MSG_ERROR_USERNAME_NOT_FOUND);
       }
 
       BeanUtils.copyProperties(cekIdUser, response);
       response.setPassword(null);
-      return response;
+
+      return CommonMethod.success(response);
    }
 
    @Override
@@ -119,38 +134,43 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
       UserResponse response = new UserResponse();
 
       if (StringUtils.isEmpty(req.getUsername())) {
-         return CommonMethod.badReq("Username tidak boleh kosong ");
+         return CommonMethod.badReq(Constant.MSG_ERROR_USERNAME);
       }
 
       if (StringUtils.isEmpty(req.getFullName())) {
-         return CommonMethod.badReq("Full name tidak boleh kosong ");
+         return CommonMethod.badReq(Constant.MSG_ERROR_FULL_NAME);
       }
 
       if (StringUtils.isEmpty(req.getPassword())) {
-         return CommonMethod.badReq("Password tidak boleh kosong ");
+         return CommonMethod.badReq(Constant.MSG_ERROR_FULL_NAME);
       }
 
       // JIKA PASS DAN RETYPE PASS TIDAK SAMA
       if (!req.getPassword().equals(req.getRetypePassword())) {
-         return CommonMethod.badReq("Pass dan retype Pass tidak sama ");
+         return CommonMethod.badReq(Constant.MSG_ERROR_PASSWORD);
       }
 
       if (StringUtils.isEmpty(req.getEmail())) {
-         return CommonMethod.badReq("Email tidak boleh kosong ");
+         return CommonMethod.badReq(Constant.MSG_ERROR_EMAIL);
       }
 
       UserEntity cekEmailUser = userRepository.getUserWithEmail(req.getEmail());
       if (cekEmailUser != null) {
-         return CommonMethod.badReq("Email sudah terpakai ");
+         return CommonMethod.badReq(Constant.MSG_ERROR_EMAIL_TERPAKAI);
       }
 
       UserEntity cekIdUser = userRepository.findById(req.getUsername()).orElse(null);
 
       if (cekIdUser != null && cekIdUser.getDeletedFlag() == false) {
-         return CommonMethod.badReq("Username sudah terpakai ");
+         return CommonMethod.badReq(Constant.MSG_ERROR_USERNAME_TERPAKAI);
       }
 
-      UserEntity entity = new UserEntity();
+      
+      UserEntity entity = userRepository.findById(req.getUsername()).orElse(null);
+      if (entity == null) {
+         entity = new UserEntity();
+      }
+
       BeanUtils.copyProperties(req, entity);
 
       // ENCODE PASS

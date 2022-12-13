@@ -16,11 +16,11 @@ public interface UserService extends BaseService {
 
    ResponseEntity<ResponseCustom<UserResponse>> validateOtpCode(ValidateOtpRequest request);
 
-   UserResponse updateUser(UserRequest req, String username);
+   ResponseEntity<ResponseCustom<UserResponse>> updateUser(UserRequest req, String username);
 
    UserResponse deletUser(String userId, String username);
 
-   UserResponse getUser(String username);
+   ResponseEntity<ResponseCustom<UserResponse>> getUser(String username);
 
    UserResponse searchUser(String username);
 }
