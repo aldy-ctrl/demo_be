@@ -13,5 +13,6 @@ public class UserRequest {
    private String fullName;
    private String email;
    private String mobilePhone;
+   private boolean isChangeEmail;
 
 }

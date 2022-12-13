@@ -142,12 +142,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
       }
 
       if (StringUtils.isEmpty(req.getPassword())) {
-         return CommonMethod.badReq(Constant.MSG_ERROR_FULL_NAME);
+         return CommonMethod.badReq(Constant.MSG_ERROR_PASSWORD);
       }
 
       // JIKA PASS DAN RETYPE PASS TIDAK SAMA
       if (!req.getPassword().equals(req.getRetypePassword())) {
-         return CommonMethod.badReq(Constant.MSG_ERROR_PASSWORD);
+         return CommonMethod.badReq(Constant.MSG_PASSWORD_RETYPE_PASSWORD_TIDAK_SAMA);
       }
 
       if (StringUtils.isEmpty(req.getEmail())) {
@@ -159,13 +159,14 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
          return CommonMethod.badReq(Constant.MSG_ERROR_EMAIL_TERPAKAI);
       }
 
-      UserEntity cekIdUser = userRepository.findById(req.getUsername()).orElse(null);
+      if (req.isChangeEmail() == false) {
+         UserEntity cekIdUser = userRepository.findById(req.getUsername()).orElse(null);
 
-      if (cekIdUser != null && cekIdUser.getDeletedFlag() == false) {
-         return CommonMethod.badReq(Constant.MSG_ERROR_USERNAME_TERPAKAI);
+         if (cekIdUser != null && cekIdUser.getDeletedFlag() == false) {
+            return CommonMethod.badReq(Constant.MSG_ERROR_USERNAME_TERPAKAI);
+         }
       }
-
-      
+       
       UserEntity entity = userRepository.findById(req.getUsername()).orElse(null);
       if (entity == null) {
          entity = new UserEntity();
